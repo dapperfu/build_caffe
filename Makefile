@@ -16,20 +16,20 @@ caffe:
 clean.caffe:
 	rm -rf caffe
 
-.PHONY: make.caffe
-make.caffe: caffe
+.PHONY: caffe.make
+caffe.make: caffe
 	${MAKE} -C $(realpath ${MK_DIR}/caffe) CONFIG_FILE=$(realpath ${MK_DIR}/Makefile.config) clean
 	${MAKE} -C $(realpath ${MK_DIR}/caffe) CONFIG_FILE=$(realpath ${MK_DIR}/Makefile.config)
 	make -C $(realpath ${MK_DIR}/caffe) CONFIG_FILE=$(realpath ${MK_DIR}/Makefile.config) distribute
 
-.PHONY: cmake.make.caffe
-cmake.make.caffe: caffe
+.PHONY: caffe.cmake.make
+caffe.cmake.make: caffe
 	rm -rf build.make
 	mkdir -p build.make
-	cd build.make && cmake -G"Unix Makefiles" ../caffe/ -DPYTHON_EXECUTABLE=${PYTHON} -DCMAKE_CXX_COMPILER=${CUSTOM_CXX}
+	cd build.make && cmake -G"Unix Makefiles" ../caffe/ -DPYTHON_EXECUTABLE=$(shell which ${PYTHON}) -DCMAKE_CXX_COMPILER=${CUSTOM_CXX}
 
-.PHONY: cmake.ninja.caffe
-cmake.ninja.caffe: caffe
+.PHONY: caffe.cmake.ninja
+caffe.cmake.ninja: caffe
 	rm -rf build.ninja
 	mkdir -p build.ninja
 	cd build.ninja && cmake -G"Ninja" ../caffe/ -DPYTHON_EXECUTABLE=${PYTHON} -DCMAKE_CXX_COMPILER=${CUSTOM_CXX}

@@ -6,6 +6,7 @@ matplotlib
 # 18.04, Google: libgoogle-glog-dev libgflags-dev
 # 18.04, Google2: libprotobuf-dev protobuf-compiler
 # 18.04: libsnappy-dev
+# 18.04, doxygen: doxygen
 # 18.04, Maths: libopenblas-dev libatlas-base-dev libboost-all-dev
 # 18.04, Formats: libhdf5-dev liblmdb-dev libleveldb-dev libopencv-dev
 # 18.04, Python: python3-numpy python3-dev python3-virtualenv
