@@ -1,9 +1,11 @@
 numpy
 matplotlib
 
-# 18.04: git make cmake pkgconf
-# 18.04: g++-7 libgflags-dev
-# 18.04: libopenblas-dev libatlas-base-dev libboost-all-dev
-# 18.04: libprotobuf-dev protobuf-compiler
-# 18.04: libhdf5-dev liblmdb-dev libleveldb-dev libopencv-dev
-# 18.04: python3-numpy python3-dev python3-virtualenv
+# 18.04, tools: git make cmake pkgconf
+# 18.04, compiler: g++-7
+# 18.04, Google: libgoogle-glog-dev libgflags-dev
+# 18.04, Google2: libprotobuf-dev protobuf-compiler
+
+# 18.04, Maths: libopenblas-dev libatlas-base-dev libboost-all-dev
+# 18.04, Formats: libhdf5-dev liblmdb-dev libleveldb-dev libopencv-dev
+# 18.04, Python: python3-numpy python3-dev python3-virtualenv
