@@ -24,7 +24,7 @@ caffe.make: caffe
 
 
 CMAKE_BOOSTLIBS = Boost_ATOMIC_LIBRARY_DEBUG Boost_ATOMIC_LIBRARY_RELEASE Boost_CHRONO_LIBRARY_DEBUG Boost_CHRONO_LIBRARY_RELEASE Boost_DATE_TIME_LIBRARY_DEBUG Boost_DATE_TIME_LIBRARY_RELEASE Boost_FILESYSTEM_LIBRARY_DEBUG Boost_FILESYSTEM_LIBRARY_RELEASE Boost_PYTHON_LIBRARY_DEBUG Boost_PYTHON_LIBRARY_RELEASE Boost_SYSTEM_LIBRARY_DEBUG Boost_SYSTEM_LIBRARY_RELEASE Boost_THREAD_LIBRARY_DEBUG Boost_THREAD_LIBRARY_RELEASE
-CMAKE_FLAGS+=$(foreach CMAKE_BOOSTLIB, ${CMAKE_BOOSTLIBS},-D${CMAKE_BOOSTLIB}=/usr/lib/x86_64-linux-gnu/libboost_numpy3-py36.so)
+CMAKE_FLAGS+=$(foreach CMAKE_BOOSTLIB, ${CMAKE_BOOSTLIBS},-D${CMAKE_BOOSTLIB}=/usr/lib/x86_64-linux-gnu/libboost_python3-py36.so)
 
 CMAKE_FLAGS+=-DPYTHON_EXECUTABLE=$(shell which python3)
 CMAKE_FLAGS+=-DCMAKE_CXX_COMPILER=${CUSTOM_CXX}
@@ -32,6 +32,21 @@ CMAKE_FLAGS+=-DCMAKE_CXX_COMPILER=${CUSTOM_CXX}
 .PHONY: debug.cmake
 debug.cmake:
 	@$(info $${CMAKE_FLAGS}=${CMAKE_FLAGS})
+
+.PHONY: dist
+dist: caffe_dist.tar.xz
+	@echo ${^} is available for distribution.
+
+caffe_dist.tar.xz: caffe_dist.tar
+	xz --compress --keep --extreme --threads=0 ${^}
+
+caffe_dist.tar: caffe/distribute/bin/caffe.bin caffe/CHANGELOG.txt
+	tar -cf caffe_dist.tar caffe/CHANGELOG.txt caffe/distribute
+
+caffe/distribute/bin/caffe.bin: caffe.make
+
+caffe/CHANGELOG.txt:
+	$(shell git --git-dir=caffe/.git log >> ${@})
 
 
 .PHONY: caffe.cmake.make

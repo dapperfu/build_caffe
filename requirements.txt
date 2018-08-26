@@ -1,5 +1,10 @@
 numpy
 matplotlib
+scikit-image
+jupyter
+notebook
+pyyaml
+git+https://github.com/google/protobuf.git#egg=protobuf&subdirectory=python
 
 # 18.04, tools: git make cmake pkgconf
 # 18.04, compiler: g++-7
