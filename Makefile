@@ -22,14 +22,27 @@ caffe.make: caffe
 	${MAKE} -C $(realpath ${MK_DIR}/caffe) CONFIG_FILE=$(realpath ${MK_DIR}/Makefile.config)
 	make -C $(realpath ${MK_DIR}/caffe) CONFIG_FILE=$(realpath ${MK_DIR}/Makefile.config) distribute
 
+
+CMAKE_BOOSTLIBS = Boost_ATOMIC_LIBRARY_DEBUG Boost_ATOMIC_LIBRARY_RELEASE Boost_CHRONO_LIBRARY_DEBUG Boost_CHRONO_LIBRARY_RELEASE Boost_DATE_TIME_LIBRARY_DEBUG Boost_DATE_TIME_LIBRARY_RELEASE Boost_FILESYSTEM_LIBRARY_DEBUG Boost_FILESYSTEM_LIBRARY_RELEASE Boost_PYTHON_LIBRARY_DEBUG Boost_PYTHON_LIBRARY_RELEASE Boost_SYSTEM_LIBRARY_DEBUG Boost_SYSTEM_LIBRARY_RELEASE Boost_THREAD_LIBRARY_DEBUG Boost_THREAD_LIBRARY_RELEASE
+
+CMAKE_FLAGS+=$(foreach CMAKE_BOOSTLIB, ${CMAKE_BOOSTLIBS},-D${CMAKE_BOOSTLIB}=/usr/lib/x86_64-linux-gnu/libboost_numpy3-py36.so)
+
+CMAKE_FLAGS+=-DPYTHON_EXECUTABLE=$(shell which python3)
+CMAKE_FLAGS+=-DCMAKE_CXX_COMPILER=${CUSTOM_CXX}
+
+.PHONY: debug.cmake
+debug.cmake:
+	@$(info $${CMAKE_FLAGS}=${CMAKE_FLAGS})
+
+
 .PHONY: caffe.cmake.make
 caffe.cmake.make: caffe
 	rm -rf build.make
 	mkdir -p build.make
-	cd build.make && cmake -G"Unix Makefiles" ../caffe/ -DPYTHON_EXECUTABLE=$(shell which ${PYTHON}) -DCMAKE_CXX_COMPILER=${CUSTOM_CXX}
+	cd build.make && cmake -G"Unix Makefiles" ../caffe/ ${CMAKE_FLAGS}
 
 .PHONY: caffe.cmake.ninja
 caffe.cmake.ninja: caffe
 	rm -rf build.ninja
 	mkdir -p build.ninja
-	cd build.ninja && cmake -G"Ninja" ../caffe/ -DPYTHON_EXECUTABLE=${PYTHON} -DCMAKE_CXX_COMPILER=${CUSTOM_CXX}
+	cd build.ninja && cmake -G"Ninja" ../caffe/ ${CMAKE_FLAGS}
