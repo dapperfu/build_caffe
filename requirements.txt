@@ -1,7 +1,7 @@
 numpy
 matplotlib
 
-# 18.04: git make cmake
+# 18.04: git make cmake pkgconfig
 # 18.04: g++-7
 # 18.04: libopenblas-dev libatlas-base-dev libboost-all-dev
 # 18.04: liblmdb-dev libprotobuf-dev libleveldb-dev
