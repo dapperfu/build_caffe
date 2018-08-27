@@ -1,4 +1,4 @@
-# Build caffe on Ubuntu 18.04
+# Build, Distribute, & Install caffe on Ubuntu 18.04 with Python 3.6.
 
 ## Instructions / Tutorial.
 
@@ -15,19 +15,101 @@ Install Ubuntu 18.04 host packages:
 
 Build with defaults:
 
-  make caffe.make
+  make dist
 
 Build without GPU support:
 
-  make caffe.make -j8 USE_CUDNN=0 CPU_ONLY=1
+  make dist -j8 USE_CUDNN=0 CPU_ONLY=1
 
-Output files are in:
+Output distributable package is:
 
-  caffe/distribute/
+  caffe_dist.tar.xz
 
-## Build Speed Improvements
+## Install Distributable Package
 
-### [icecc](https://github.com/icecc/icecream) distributed builds.
+**Local installation** of caffe package.
+
+For shared machines where you don't have admin access.
+
+	tar -xJvf caffe_dist.tar.xz -C ~/.local/
+
+Configure your shell to find the library and path:
+
+	echo 'export LD_LIBRARY_PATH=~/.local/caffe/distribute/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+	echo 'export PATH=~/.local/caffe/distribute/bin:$PATH' >> ~/.bashrc
+
+**Global installation** of caffe package for all users:
+
+For shared machines or devices you own where you have admin access:
+
+As root:
+
+	# Extract distribution archive.
+	tar -xJvf caffe_dist.tar.xz -C /opt/
+	# Add libraries.
+	echo /opt/caffe/distribute/lib > /etc/ld.so.conf.d/caffe.conf
+	ldconfig
+	# Ensure that that the libraries are found
+	ldconfig --print-cache | grep caffe
+	# Add caffe to everyone's path:
+	echo 'export PATH=/opt/caffe/distribute/bin:$PATH' > /etc/profile.d/caffe.sh
+
+Installing in a directory other than ```/opt``` is left as an exercise to the reader.
+
+# Python Integration
+
+There are multiple ways to expose the ```caffe``` Python modules to Python.
+
+
+**Local** install, Permanently:
+
+	echo 'export PYTHONPATH=~/.local/caffe/distribute/python:$PYTHONPATH' >> ~/.bashrc
+
+**Global** install, Permanently:
+
+	echo 'PYTHONPATH=/opt/caffe/distribute/python:$PYTHONPATH' >> /etc/profile.d/caffe.sh
+
+**Local** install, for each script/notebook:
+
+Add this before ```import caffe```
+
+```python
+import os, sys
+sys.path.append(os.path.expanduser("~/.local/caffe/distribute/python"))
+```
+
+**Global** install, for each script/notebook:
+
+Add this before ```import caffe```
+
+```python
+import sys
+sys.path.append("/opt/caffe/distribute/python")
+```
+
+## Uninstall:
+
+**Local installation** of caffe package:
+
+	rm -rf ~/.local/caffe
+
+Remove caffe ```LD_LIBRARY_PATH``` and ```PATH``` lines from ~/.bashrc
+
+**Global installation**:
+
+	rm -rf /opt/caffe
+	rm -rf /etc/ld.so.conf.d/caffe.conf && ldconfig
+	rm -rf /etc/profile.d/caffe.sh
+
+# Issues
+
+Anything *doesn't* work, open an issue: https://github.com/jed-frey/build_caffe/issues/new
+
+Describe what actions you took, what it did, what you expected it to do, what you tried to fix it.
+
+# Build Speed Improvements
+
+## [icecc](https://github.com/icecc/icecream) distributed builds.
 
 > Icecream takes compile jobs from a build and distributes it among remote machines allowing a parallel build.
 
@@ -48,7 +130,7 @@ Add icecc path to path:
 
 	export PATH=/usr/lib/icecc/bin:$PATH
 
-### [ccache](https://ccache.samba.org/)
+## [ccache](https://ccache.samba.org/)
 
 > ccache is a compiler cache. It speeds up recompilation by caching previous compilations and detecting when the same compilation is being done again. Supported languages are C, C++, Objective-C and Objective-C++.
 
