@@ -15,15 +15,15 @@ Install Ubuntu 18.04 host packages:
 
 Build with defaults:
 
-  make dist
+    make dist
 
 Build without GPU support:
 
-  make dist -j8 USE_CUDNN=0 CPU_ONLY=1
+    make dist -j8 USE_CUDNN=0 CPU_ONLY=1
 
 Output distributable package is:
 
-  caffe_dist.tar.xz
+    caffe_dist.tar.xz
 
 ## Install Distributable Package
 
